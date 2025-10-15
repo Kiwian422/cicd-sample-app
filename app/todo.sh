@@ -7,12 +7,10 @@ RUN apk add --no-cache python3 g++ make
 
 WORKDIR /app
 
-# Copy dependency files from app/
-COPY app/package.json app/yarn.lock ./
+COPY package.json yarn.lock ./
 RUN yarn install --production
 
-# Copy the rest of the source code
-COPY app/ .
+COPY . .
 
 EXPOSE 3000
 CMD ["node", "src/index.js"]
