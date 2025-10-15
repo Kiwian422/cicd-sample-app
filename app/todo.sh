@@ -1,14 +1,23 @@
 #!/bin/bash
 set -euo pipefail
 
-cat > app/Dockerfile << _EOF_
+cat > Dockerfile << _EOF_
 FROM node:lts-alpine
 RUN apk add --no-cache python3 g++ make
+
 WORKDIR /app
-COPY . .
-EXPOSE 3000
+
+# Copy dependency files from app/
+COPY app/package.json app/yarn.lock ./
+
+# Install dependencies
 RUN yarn install --production
-CMD ["node", "/app/src/index.js"]
+
+# Copy the rest of the source code
+COPY app/ . 
+
+EXPOSE 3000
+CMD ["node", "src/index.js"]
 _EOF_
 
 cd app || exit
